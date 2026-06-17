@@ -3,17 +3,12 @@ import pandas as pd
 import pyodbc
 import google.generativeai as genai
 
-# ---------------------------
-# Gemini API Key
-# ---------------------------
+#Put API Key Here To Get Output
 
-genai.configure(api_key="AQ.Ab8RN6JmbkB9k4X5FIw7DajMu2ask2QXZ87LcTtOikuYFWE98g")
+genai.configure(api_key="Your API Key")
 
 model = genai.GenerativeModel("gemini-2.5-flash")
 
-# ---------------------------
-# Page Config
-# ---------------------------
 
 st.set_page_config(
     page_title="AI Business Analyst",
@@ -22,9 +17,6 @@ st.set_page_config(
 
 st.title("🤖 AI Business Analyst Dashboard")
 
-# ---------------------------
-# SQL Connection
-# ---------------------------
 
 conn = pyodbc.connect(
 
@@ -38,9 +30,7 @@ conn = pyodbc.connect(
 
 df = pd.read_sql_query("SELECT * FROM Sales_1", conn)
 
-# ---------------------------
-# KPI Cards
-# ---------------------------
+
 
 col1,col2,col3,col4 = st.columns(4)
 
@@ -66,9 +56,7 @@ col4.metric(
 
 st.divider()
 
-# ---------------------------
-# Charts
-# ---------------------------
+
 
 c1,c2 = st.columns(2)
 
@@ -90,9 +78,7 @@ with c2:
 
 st.divider()
 
-# ---------------------------
-# AI Business Analyst
-# ---------------------------
+
 
 st.subheader("💬 Ask AI Business Analyst")
 
