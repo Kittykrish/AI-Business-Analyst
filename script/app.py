@@ -1,10 +1,32 @@
 import streamlit as st
 import pandas as pd
 import pyodbc
+import google.generativeai as genai
+
+# ---------------------------
+# Gemini API Key
+# ---------------------------
+
+genai.configure(api_key="AQ.Ab8RN6JmbkB9k4X5FIw7DajMu2ask2QXZ87LcTtOikuYFWE98g")
+
+model = genai.GenerativeModel("gemini-2.5-flash")
+
+# ---------------------------
+# Page Config
+# ---------------------------
+
+st.set_page_config(
+    page_title="AI Business Analyst",
+    layout="wide"
+)
 
 st.title("🤖 AI Business Analyst Dashboard")
 
-conn=pyodbc.connect(
+# ---------------------------
+# SQL Connection
+# ---------------------------
+
+conn = pyodbc.connect(
 
 "DRIVER={ODBC Driver 17 for SQL Server};"
 "SERVER=localhost;"
@@ -14,35 +36,131 @@ conn=pyodbc.connect(
 
 )
 
-df=pd.read_sql_query("SELECT * FROM Sales",conn)
+df = pd.read_sql_query("SELECT * FROM Sales_1", conn)
 
-st.metric("Total Sales",round(df["Sales"].sum(),2))
+# ---------------------------
+# KPI Cards
+# ---------------------------
 
-st.metric("Total Profit",round(df["Profit"].sum(),2))
+col1,col2,col3,col4 = st.columns(4)
 
-st.metric("Customers",df["CustomerID"].nunique())
+col1.metric(
+    "Total Sales",
+    f"${df['Sales'].sum():,.2f}"
+)
 
-st.subheader("Sales by Category")
+col2.metric(
+    "Total Profit",
+    f"${df['Profit'].sum():,.2f}"
+)
 
-st.bar_chart(df.groupby("Category")["Sales"].sum())
+col3.metric(
+    "Orders",
+    len(df)
+)
 
-st.subheader("Profit by Region")
+col4.metric(
+    "Customers",
+    df["Customer_ID"].nunique()
+)
 
-st.bar_chart(df.groupby("Region")["Profit"].sum())
+st.divider()
 
-question=st.text_input("Ask Business Question")
+# ---------------------------
+# Charts
+# ---------------------------
+
+c1,c2 = st.columns(2)
+
+with c1:
+
+    st.subheader("Sales by Category")
+
+    st.bar_chart(
+        df.groupby("Category")["Sales"].sum()
+    )
+
+with c2:
+
+    st.subheader("Profit by Region")
+
+    st.bar_chart(
+        df.groupby("Region")["Profit"].sum()
+    )
+
+st.divider()
+
+# ---------------------------
+# AI Business Analyst
+# ---------------------------
+
+st.subheader("💬 Ask AI Business Analyst")
+
+question = st.text_input(
+    "Example: Which category is performing best?"
+)
 
 if st.button("Generate AI Insight"):
 
-    st.success("""
+    summary = f"""
 
-Technology contributes highest sales.
+Total Sales:
+{df['Sales'].sum()}
 
-Furniture has low profitability.
+Total Profit:
+{df['Profit'].sum()}
 
-South region requires attention.
+Orders:
+{len(df)}
 
-Recommendation:
-Reduce discounts and optimize stock.
+Customers:
+{df['Customer_ID'].nunique()}
 
-""")
+Category Sales:
+
+{df.groupby("Category")["Sales"].sum()}
+
+Category Profit:
+
+{df.groupby("Category")["Profit"].sum()}
+
+Region Sales:
+
+{df.groupby("Region")["Sales"].sum()}
+
+Region Profit:
+
+{df.groupby("Region")["Profit"].sum()}
+
+"""
+
+    prompt = f"""
+
+You are a Senior Business Analyst.
+
+Using the business summary below,
+answer the user's question.
+
+Business Summary:
+
+{summary}
+
+Question:
+
+{question}
+
+Provide:
+
+1. Executive Summary
+
+2. Key Findings
+
+3. Recommendation
+
+"""
+
+    response = model.generate_content(prompt)
+
+    st.success(response.text)
+
+conn.close()

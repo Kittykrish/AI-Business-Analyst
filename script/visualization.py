@@ -12,7 +12,7 @@ conn = pyodbc.connect(
 
 )
 
-df=pd.read_sql_query("SELECT * FROM Sales",conn)
+df=pd.read_sql_query("SELECT * FROM Sales_1",conn)
 
 df["OrderDate"]=pd.to_datetime(df["OrderDate"])
 
