@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import pyodbc
+# import pyodbc
 import google.generativeai as genai
 
 #Put API Key Here To Get Output
@@ -20,17 +20,17 @@ st.set_page_config(
 st.title("AI Business Analyst Dashboard")
 
 
-conn = pyodbc.connect(
+# conn = pyodbc.connect(
 
-"DRIVER={ODBC Driver 17 for SQL Server};"
-"SERVER=localhost;"
-"DATABASE=AI_Business_Analyst;"
-"Trusted_Connection=yes;"
-"TrustServerCertificate=yes;"
+# "DRIVER={ODBC Driver 17 for SQL Server};"
+# "SERVER=localhost;"
+# "DATABASE=AI_Business_Analyst;"
+# "Trusted_Connection=yes;"
+# "TrustServerCertificate=yes;"
 
-)
+# )
 
-df = pd.read_sql_query("SELECT * FROM Sales_1", conn)
+# df = pd.read_sql_query("SELECT * FROM Sales_1", conn)
 
 
 
@@ -151,4 +151,4 @@ Provide:
 
     st.success(response.text)
 
-conn.close()
+# conn.close()
