@@ -15,7 +15,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🤖 AI Business Analyst Dashboard")
+st.title("AI Business Analyst Dashboard")
 
 
 conn = pyodbc.connect(
