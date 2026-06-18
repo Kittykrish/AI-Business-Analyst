@@ -9,6 +9,8 @@ genai.configure(api_key="Your API Key")
 
 model = genai.GenerativeModel("gemini-2.5-flash")
 
+df=pd.read_excel("data/sales.xlsx")
+
 
 st.set_page_config(
     page_title="AI Business Analyst",
