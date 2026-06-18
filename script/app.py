@@ -80,7 +80,7 @@ st.divider()
 
 
 
-st.subheader("💬 Ask AI Business Analyst")
+st.subheader("Ask AI Business Analyst")
 
 question = st.text_input(
     "Example: Which category is performing best?"
